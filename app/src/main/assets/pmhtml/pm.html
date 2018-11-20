@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script  type="text/javascript">
+
+            var tareas = [];
+            var _ID = 0;    
+            var doNueva = function (){
+                document.getElementById("altaTareaDiv").style.display = 'block';	
+                document.getElementById("listaTareaDiv").style.display = 'none';
+                document.getElementById("latLngTarea").value=AndroidGeo.getUbicacion();
+            }   
+            var doGuardar = function (){
+                let auxNombre=document.getElementById("nombreTarea").value;
+                let auxUbicacion=document.getElementById("latLngTarea").value;
+                let unaTarea = {id:++_ID,nombre:auxNombre,lugar:auxUbicacion}
+                console.log(unaTarea);
+                tareas.push(unaTarea);
+                console.log(tareas);
+                doCancelar();
+                mostrarListaTareas();
+            }   
+            var doCancelar = function (){
+                document.getElementById("nombreTarea").value="";
+                document.getElementById("latLngTarea").value="";
+                document.getElementById("altaTareaDiv").style.display = 'none';	
+                document.getElementById("listaTareaDiv").style.display = 'block';	                
+            }   
+            var mostrarListaTareas = function(){
+                let detalle = tareas.map(function(elemento,indice){
+                    console.log(elemento);
+                    console.log(indice);
+                    return "<li id='elemento_"+indice+"'><strong>"+
+                            elemento.id+"&nbsp;&nbsp;</strong>"+
+                            elemento.nombre+"&nbsp;&nbsp;&nbsp;"+
+                            elemento.lugar+"&nbsp;&nbsp;&nbsp;"+
+                            "<button onclick='borrar("+indice+")'>Quitar</button></li>";
+                });
+                console.log(detalle.join(''));
+                document.getElementById("tareasLista").innerHTML = detalle.join('');
+
+            }
+            function borrar(index){
+                tareas.splice(index, 1);
+                var filaBorrar = document.getElementById("elemento_"+index);
+                console.log(filaBorrar);
+                filaBorrar.remove();
+            }
+            function armarPagina(){
+                document.getElementById("altaTareaDiv").style.display = 'none';	
+                document.getElementById("btnNueva").onclick = doNueva;	
+                document.getElementById("btnGuardar").onclick = doGuardar;	
+                document.getElementById("btnCancelar").onclick = doCancelar;
+                AndroidGeo.mostrarMsgAndroid("pagina configurada");
+            }            
+        </script>
+    </head>
+    <body onload="armarPagina()">
+        <h1>Alta de tareas</h1>
+        <div id="altaTareaDiv">
+            <div>Descripcion<input type="text" id="nombreTarea" /></div>
+            <div>Lugar<input type="text" id="latLngTarea" /></div>
+            <div>
+                <Button id="btnGuardar">Guardar</Button>
+                <Button id="btnCancelar">Cancelar</Button>
+            </div>
+        </div>
+        <div id="listaTareaDiv">
+            <ul id="tareasLista">
+            </ul>
+            <button id="btnNueva">NUEVA</button>
+        </div>
+
+    </body>
+</html>        

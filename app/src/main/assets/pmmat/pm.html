@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!--Import Google Icon Font-->
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <!--Import materialize.css-->
+            <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      
+            <!--Let browser know website is optimized for mobile-->
+          </head>
+      
+        <script>
+            var tareas = [];         
+            var _ID = 0;    
+            var doNueva = function (){
+                document.getElementById("altaTareaDiv").style.display = 'block';	
+                document.getElementById("listaTareaDiv").style.display = 'none';	
+            }   
+            var doGuardar = function (){
+                let unaTarea = {id:++_ID,nombre:document.getElementById("nombreTarea").value,lugar:[0.0,0.0]}
+                console.log(unaTarea);
+                tareas.push(unaTarea);
+                console.log(tareas);
+                doCancelar();
+                mostrarListaTareas();
+            }   
+            var doCancelar = function (){
+                document.getElementById("nombreTarea").value="";
+                document.getElementById("latLngTarea").value="";
+                document.getElementById("altaTareaDiv").style.display = 'none';	
+                document.getElementById("listaTareaDiv").style.display = 'block';	                
+            }   
+            var mostrarListaTareas = function(){
+                let detalle = tareas.map(function(elemento,indice){
+                    console.log(elemento);
+                    console.log(indice);
+                    let btnBorrar ="<span><a href=\"#\" onclick='borrar("+indice+")' ><i class=\"material-icons right\">delete</i>Borrar</a></span>";
+                    return "<li id='elemento_"+indice+"' class='collection-item'><strong>"+
+                            elemento.id+"</strong><span style='margin:10px;'>"+
+                            elemento.nombre+"</span>"+btnBorrar+"</li>";
+                            //<a class=\"waves-effect waves-light btn-large\">Quitar</button>
+                });
+                console.log(detalle.join(''));
+                document.getElementById("tareasLista").innerHTML = detalle.join('');
+
+            }
+            function borrar(index){
+                tareas.splice(index, 1);
+                var filaBorrar = document.getElementById("elemento_"+index);
+                console.log(filaBorrar);
+                filaBorrar.remove();
+                return false;
+            }
+            function armarPagina(){
+                document.getElementById("altaTareaDiv").style.display = 'none';	
+                document.getElementById("btnNueva").onclick = doNueva;	
+                document.getElementById("btnGuardar").onclick = doGuardar;	
+                document.getElementById("btnCancelar").onclick = doCancelar;	
+            }            
+        </script>
+    </head>
+    <body onload="armarPagina()">
+        <h1>Alta de tareas</h1>
+        <div id="altaTareaDiv" class="row">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input type="text" id="nombreTarea"  class="validate" />
+                        <label for="nombreTarea">Nombre</label>
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="input-field col s12">
+                            <input type="text" id="latLngTarea"  class="validate" />
+                            <label for="latLngTarea">Nombre</label>
+                        </div>
+                </div>
+            </form>                
+            <div class="row">
+                <button type="button" id="btnGuardar" class="waves-effect waves-light btn-large">Guardar</Button>
+                <button type="button" id="btnCancelar" class="waves-effect waves-light btn-large">Cancelar</Button>
+            </div>
+        </div>
+        <div id="listaTareaDiv">
+            <ul id="tareasLista" class="collection">
+            </ul>
+            <button id="btnNueva" class="waves-effect waves-light btn-large">NUEVA</button>
+        </div>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+    </body>
+</html>        
